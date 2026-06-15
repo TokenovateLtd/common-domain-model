@@ -1,0 +1,27 @@
+namespace cdm.event.instructioncomposition.reset
+version "${project.version}"
+
+import cdm.product.common.schedule.*
+
+// Instruction Composition STEP 2 - Determine Unadjusted Calculation Period
+func Create_DetermineUnadjustedCalculationPeriodInstruction: <"This function generates the Instruction Composition step instruction necessary to determine the unadjusted calculation period and adding it to the DetermineUnadjustedObservationPeriodInstruction.">
+    inputs:
+        calculationPeriodDates CalculationPeriodDates (1..1)
+        unadjustedResetDate date (1..1)
+    output:
+        determineUnadjustedCalculationPeriodInstruction DetermineUnadjustedCalculationPeriodInstruction (1..1)
+
+    alias calculationPeriod: <"The resulting calculation period obtained from the Calculation Period Dates and the unadjusted reset date.">
+        CalculationPeriodBase {
+            adjustedStartDate: CalculationPeriod(
+                        calculationPeriodDates,
+                        unadjustedResetDate
+                    ) -> startDate,
+            adjustedEndDate: CalculationPeriod(calculationPeriodDates, unadjustedResetDate) -> endDate
+        }
+
+    set determineUnadjustedCalculationPeriodInstruction -> unadjustedCalculationPeriod: <"Sets the unadjusted calculation period to the output.">
+        calculationPeriod
+
+    set determineUnadjustedCalculationPeriodInstruction -> unadjustedResetDate: <"Sets the unadjusted reset date to the output.">
+        unadjustedResetDate

@@ -1,6 +1,16 @@
 namespace cdm.event.instructioncomposition.reset
 version "${project.version}"
 
+import cdm.product.common.schedule.*
+
+type DetermineUnadjustedCalculationPeriodInstruction: <"Instruction that contains the unadjusted calculation period.">
+    unadjustedCalculationPeriod CalculationPeriodBase (1..1)
+    unadjustedResetDate date (1..1)
+
 type ResetInstructionState: <"The definitive state object for the Reset process. It acts as a cumulative 'Golden Record,' storing every data point captured from Step 1 (Index Collection) through Step 7 (Final Calculation) to ensure deterministic processing.">
+
+    // Step 2 - DetermineUnadjustedCalculationPeriodInstruction
+    unadjustedCalculationPeriod CalculationPeriodBase (0..1) <"The raw start and end dates of the period before any business day adjustments are applied.">
+    unadjustedResetDate date (0..1) <"The theoretical reset date before applying business day conventions.">
 
 type ResetInstructionSteps: <"A wrapper that encapsulates the specific ResetInstructionInstructionCompositionStepsEnum, allowing the engine to identify the exact phase of the Reset lifecycle currently being processed.">
