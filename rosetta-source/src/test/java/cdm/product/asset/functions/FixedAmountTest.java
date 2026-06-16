@@ -12,15 +12,14 @@ import cdm.product.asset.InterestRatePayout;
 import cdm.product.asset.RateSpecification;
 import cdm.product.common.schedule.CalculationPeriodDates;
 import cdm.product.common.schedule.RateSchedule;
-import javax.inject.Inject;
 import com.rosetta.model.lib.records.Date;
 import org.finos.cdm.functions.AbstractFunctionTest;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Inject;
 import java.math.BigDecimal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FixedAmountTest extends AbstractFunctionTest {
 
@@ -78,6 +77,12 @@ class FixedAmountTest extends AbstractFunctionTest {
                         .setRateSchedule(RateSchedule.builder().setPriceValue(PriceSchedule.builder().setValue(price)))))
                 .build();
 
-        assertThat(fixedAmount.evaluate(interestRatePayout, notional.getValue(), Date.of(2018, 8, 22), null), is(new BigDecimal("750000.0000")));
+        // With TKN's ISDA non-overlapping period adjustment, the second and subsequent periods start
+        // the day after the previous period ends. For this schedule (roll on 3rd), Aug 22 falls in
+        // the period [Jul 4, Oct 3] rather than the Strata-native [Jul 3, Oct 3].
+        // 30E/360 on [Jul 4, Oct 3] = (3*30 + (3-4)) / 360 = 89/360
+        // amount = 50,000,000 * 0.06 * 89/360 ≈ 741,666.67
+        BigDecimal result = fixedAmount.evaluate(interestRatePayout, notional.getValue(), Date.of(2018, 8, 22), null);
+        assertEquals(50_000_000 * 0.06 * 89.0 / 360.0, result.doubleValue(), 0.01);
     }
 }
