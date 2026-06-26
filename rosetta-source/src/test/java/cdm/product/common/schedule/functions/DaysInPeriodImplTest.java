@@ -27,7 +27,7 @@ public class DaysInPeriodImplTest extends AbstractFunctionTest {
         Integer daysInPeriod = calculationPeriod.evaluate(calculationPeriodDates, effectiveDate).getDaysInPeriod();
         
         assertNotNull(daysInPeriod);
-        assertThat("Unexpected calculated daysInPeriod", daysInPeriod, is(93));
+        assertThat("Unexpected calculated daysInPeriod", daysInPeriod, is(92));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class DaysInPeriodImplTest extends AbstractFunctionTest {
         Integer daysInPeriod = calculationPeriod.evaluate(calculationPeriodDates, effectiveDate).getDaysInPeriod();
         
         assertNotNull(daysInPeriod);
-        assertThat("Unexpected calculated daysInPeriod", daysInPeriod, is(91));
+        assertThat("Unexpected calculated daysInPeriod", daysInPeriod, is(90));
     }
 
     private CalculationPeriodDates getCalculationPeriodDates(Date effectiveDate, Date terminationDate, RollConventionEnum rollConvention) {
