@@ -12,6 +12,11 @@ type ResetInstructionState: <"The definitive state object for the Reset process.
     // Step 1 - CollectFloatingRateOptionInstruction
     floatingRateIndex FloatingRateIndexEnum (0..1) <"The benchmark rate index (e.g., LIBOR, EURIBOR, SOFR) identified for this reset.">
     tradeDate date (0..1) <"The date the underlying trade was executed, used for referencing the relevant holiday calendars.">
+    // Step 4 - AdjustDateInstruction
+    adjustedResetDate date (0..1) <"The final, legally binding reset date after applying business day conventions.">
 
 type ResetInstructionSteps: <"A wrapper that encapsulates the specific ResetInstructionCompositionStepsEnum, allowing the engine to identify the exact phase of the Reset lifecycle currently being processed.">
     resetInstructionCompositionSteps ResetInstructionCompositionStepsEnum (1..1)
+
+type AdjustDateInstruction: <"Instruction that holds the adjusted date.">
+    adjustedDate date (1..1)

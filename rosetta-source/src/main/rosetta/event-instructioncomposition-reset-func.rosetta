@@ -1,6 +1,8 @@
 namespace cdm.event.instructioncomposition.reset
 version "${project.version}"
 
+import cdm.base.datetime.*
+
 import cdm.product.asset.*
 
 // Instruction Composition  STEP 1 - Get Floating Rate Index Name
@@ -20,3 +22,25 @@ func Create_CollectFloatingRateOptionInstruction: <"This function generates the 
 
     set floatingRateOptionDataInstruction -> floatingRateIndex: index
     set floatingRateOptionDataInstruction -> tradeDate: tradeDate
+
+
+// Instruction Composition STEP 4 - Adjust the Reset Date
+func Create_AdjustDateInstruction: <"This function generates the Instruction Composition step instruction necessary to adjust the unadjusted reset date, and adding it to the AdjustResetDateInstruction. Supported business day conventions in this version are: {Following, Preceding, ModFollowing}. Other conventions (e.g., ModPreceding, Nearest) are currently out-of-scope.">
+    inputs:
+        unadjustedDate date (1..1) <"The Unadjusted Date.">
+        nonBusinessDates date (0..*) <"The list of non business dates applicable to the Reset Date, obtained from the GetNonBusinessDates function.">
+        businessConvention BusinessDayConventionEnum (1..1) <"The business day convention to apply to adjust the Unadjusted Reset Date (e.g., FOLLOWING, PRECEDING).">
+    output:
+        adjustDateInstruction AdjustDateInstruction (1..1) <"The Adjusted Reset Date.">
+
+    alias adjustedResetDate: <"The adjusted reset date.">
+        AdjustDateToBusinessDayConvention(
+                unadjustedDate,
+                nonBusinessDates,
+                businessConvention
+            )
+
+    set adjustDateInstruction:
+        AdjustDateInstruction {
+            adjustedDate: adjustedResetDate
+        }
