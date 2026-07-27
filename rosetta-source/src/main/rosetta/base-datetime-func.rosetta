@@ -361,13 +361,13 @@ func AdjustDateToBusinessDayConvention: <"Applies a specific business day conven
         if (holidayDates contains unadjustedDate) = False
         then unadjustedDate
         else businessConvention switch
-      FOLLOWING then 
-        ApplyFollowing(unadjustedDate, holidayDates),
-      PRECEDING then 
-        ApplyPreceding(unadjustedDate, holidayDates),
-      MODFOLLOWING then 
-        ApplyModFollowing(unadjustedDate, holidayDates),
-      default unadjustedDate
+            FOLLOWING then
+                ApplyFollowing(unadjustedDate, holidayDates),
+            PRECEDING then
+                ApplyPreceding(unadjustedDate, holidayDates),
+            MODFOLLOWING then
+                ApplyModFollowing(unadjustedDate, holidayDates),
+            default unadjustedDate
 
 func ApplyFollowing: <"Finds the next available business day by moving forward in time.">
     inputs:

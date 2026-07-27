@@ -9,6 +9,7 @@ import cdm.event.instructioncomposition.InstructionCompositionTypeEnum;
 import cdm.event.instructioncomposition.reset.ResetInstructionCompositionStepsEnum;
 import cdm.event.instructioncomposition.reset.ResetInstructionState;
 import cdm.event.instructioncomposition.reset.ResetInstructionSteps;
+import cdm.event.instructioncomposition.reset.functions.ResetInstructionNextStep;
 import com.google.inject.Binder;
 import org.finos.cdm.functions.AbstractFunctionTest;
 import org.junit.jupiter.api.BeforeEach;

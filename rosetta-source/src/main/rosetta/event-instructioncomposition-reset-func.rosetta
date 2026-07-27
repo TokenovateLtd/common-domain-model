@@ -2,7 +2,7 @@ namespace cdm.event.instructioncomposition.reset
 version "${project.version}"
 
 import cdm.base.datetime.*
-
+import cdm.event.instructioncomposition.*
 import cdm.product.asset.*
 
 // Instruction Composition  STEP 1 - Get Floating Rate Index Name
@@ -22,7 +22,6 @@ func Create_CollectFloatingRateOptionInstruction: <"This function generates the 
 
     set floatingRateOptionDataInstruction -> floatingRateIndex: index
     set floatingRateOptionDataInstruction -> tradeDate: tradeDate
-
 
 // Instruction Composition STEP 4 - Adjust the Reset Date
 func Create_AdjustDateInstruction: <"This function generates the Instruction Composition step instruction necessary to adjust the unadjusted reset date, and adding it to the AdjustResetDateInstruction. Supported business day conventions in this version are: {Following, Preceding, ModFollowing}. Other conventions (e.g., ModPreceding, Nearest) are currently out-of-scope.">
@@ -44,3 +43,35 @@ func Create_AdjustDateInstruction: <"This function generates the Instruction Com
         AdjustDateInstruction {
             adjustedDate: adjustedResetDate
         }
+
+// COMPOSITION STATE CHANGES FOR RESET
+func UpdateResetCompositionState: <"Handles the field-by-field overlay for the Reset process state.">
+    inputs:
+        currentResetCompositionState ResetInstructionState (0..1)
+        nextStepToAdd CompositionStepInstructions (1..1)
+    output:
+        updatedResetCompositionState ResetInstructionState (1..1)
+
+    // Step 1: Floating Rate Index & Trade Date
+    set updatedResetCompositionState -> floatingRateIndex:
+        if nextStepToAdd -> collectFloatingRateOption exists
+        then nextStepToAdd -> collectFloatingRateOption -> floatingRateIndex
+        else currentResetCompositionState -> floatingRateIndex
+    set updatedResetCompositionState -> tradeDate:
+        if nextStepToAdd -> collectFloatingRateOption exists
+        then nextStepToAdd -> collectFloatingRateOption -> tradeDate
+        else currentResetCompositionState -> tradeDate
+
+    // Step 4: Adjusted Date
+    set updatedResetCompositionState -> adjustedResetDate:
+        if nextStepToAdd -> adjustDate exists
+        then nextStepToAdd -> adjustDate -> adjustedDate
+        else currentResetCompositionState -> adjustedResetDate
+
+// NEXT STEP FOR RESET
+func ResetInstructionNextStep: <"A state-machine evaluator for the Reset process that identifies the next required instruction by checking for the presence of mandatory data fields across the seven-step lifecycle.">
+    inputs:
+        resetInstructionState ResetInstructionState (0..1)
+        instructionCompositionOutput InstructionCompositionOutput (0..1)
+    output:
+        resetInstructionNextStep ResetInstructionSteps (0..1)

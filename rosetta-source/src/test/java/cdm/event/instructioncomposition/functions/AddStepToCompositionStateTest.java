@@ -5,6 +5,7 @@ import cdm.event.instructioncomposition.CompositionStepInstruction;
 import cdm.event.instructioncomposition.CompositionStepInstructions;
 import cdm.event.instructioncomposition.InstructionCompositionTypeEnum;
 import cdm.event.instructioncomposition.reset.ResetInstructionState;
+import cdm.event.instructioncomposition.reset.functions.UpdateResetCompositionState;
 import com.google.inject.Binder;
 import javax.inject.Inject;
 

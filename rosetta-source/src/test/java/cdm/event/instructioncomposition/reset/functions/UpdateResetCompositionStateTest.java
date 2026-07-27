@@ -1,4 +1,4 @@
-package cdm.event.instructioncomposition.functions;
+package cdm.event.instructioncomposition.reset.functions;
 
 import cdm.base.staticdata.asset.rates.FloatingRateIndexEnum;
 import cdm.event.instructioncomposition.CompositionStepInstructions;
